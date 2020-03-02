@@ -33,8 +33,6 @@ class StatementController {
                 new Performance("hamlet", 10),
                 new Performance("as-like", 25),
                 new Performance("othello", 20));
-        List<Play> query = template.query("SELECT * FROM plays", (rs, rowNum) -> new Play(rs.getString("name"), rs.getString("type")));
-        ImmutableMap<String, Play> plays = Maps.uniqueIndex(query, p -> getPlayStringFunction(p));
         Invoice invoice = new Invoice("BigCo", performances);
 
         var result = String.format("Statement for %s\n", invoice.customer);
@@ -42,7 +40,7 @@ class StatementController {
         NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
 
         for (var perf : invoice.performances) {
-            var play = plays.get(perf.playID);
+            var play = Maps.uniqueIndex(template.query("SELECT * FROM plays", (rs, rowNum) -> new Play(rs.getString("name"), rs.getString("type"))), this::getPlayStringFunction).get(perf.playID);
             var thisAmount = 0;
 
             switch (play.type) {
@@ -83,7 +81,7 @@ class StatementController {
 
     private String getPlayStringFunction(Play p) {
         if (p.name == "Hamlet") {
-            return p.name.toLowerCase();
+            return "hamlet";
         } else if (p.name.equals("As You Like It")) {
             return "as-like";
         } else {
