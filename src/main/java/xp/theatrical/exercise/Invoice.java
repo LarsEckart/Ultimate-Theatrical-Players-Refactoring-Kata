@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.list.UnmodifiableList;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.core.io.ClassPathResource;
 
@@ -45,7 +46,7 @@ public class Invoice {
 
             var performances = fileContent.lines().dropWhile(l -> !l.startsWith(customer)).takeWhile(l -> l.startsWith(customer)).map(l -> l.split(", "))
                     .map(a -> Performance.builder().playID(a[1]).audience(Integer.parseInt(a[2])).build()).collect(Collectors.toList());
-            if (CollectionUtils.isEmpty(performances)) {
+            if (BooleanUtils.isTrue( CollectionUtils.isEmpty(performances)) ){
                 this.performances = UnmodifiableList.decorate(new ArrayList<>());
             } else {
                 this.performances = new ArrayList<Performance>(performances);

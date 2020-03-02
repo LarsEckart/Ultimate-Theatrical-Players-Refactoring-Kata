@@ -3,6 +3,7 @@ package xp.theatrical.exercise;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
@@ -51,11 +52,15 @@ class StatementController {
                 play =
                         Maps.uniqueIndex(template.query("SELECT id, name, type FROM plays", (rs, rowNum) -> new Play(rs.getLong("id"), rs.getString("name"), rs.getString("tpye"))),
                                 this::getPlayStringFunction).get(perf.playID);
-            } catch (Exception e) {
-                // I won't fix sql, that is for database nerds, real java programmers use hibernate.
-                Map<String, Play> map = new HashMap<>();
-                org.apache.commons.collections4.MapUtils.populateMap(map, repo.findAll(), this::getPlayStringFunction);
-                play = map.get(perf.playID);
+            } catch (Exception e1) {
+                // some exception in line 53 but I won't fix sql, that is for database nerds, real java programmers use hibernate.
+                try {
+                    Map<String, Play> map = new HashMap<>();
+                    org.apache.commons.collections4.MapUtils.populateMap(map, repo.findAll(), this::getPlayStringFunction);
+                    play = map.get(perf.playID);
+                } catch (HibernateException e2) {
+                    throw new RuntimeException("hibernate didn't succeed, we're lost");
+                }
             }
             var thisAmount = 0;
             i++;
@@ -77,7 +82,7 @@ class StatementController {
             // add volume credits
             volumeCredits += Math.max(perf.audience - 30, 0);
             // add extra credit for every ten comedy attendees
-            if ("comedy".equals(play.getType()))
+            if ("comedy".equals(play.getType()) == true)
                 volumeCredits += Math.floor(perf.audience / 5);
             // print line for this order
             st += String.format("  %s: %s (%s seats)\n", play.getName(), frmt.format(thisAmount / 100), perf.audience);
