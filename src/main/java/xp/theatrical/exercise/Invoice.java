@@ -1,6 +1,7 @@
 package xp.theatrical.exercise;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.list.UnmodifiableList;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
@@ -35,17 +37,23 @@ public class Invoice {
 
     @SuppressWarnings("unchecked")
     public Invoice(String customer) throws IOException {
-        this.customer = customer;
-        File file = new ClassPathResource("CheapExcel.txt").getFile();
-        // cool, no input streams necessary, guava rulezzzz
-        String fileContent = Files.toString(file, Charsets.UTF_8);
+        if (customer != null) {
+            this.customer = customer;
+            File file = new ClassPathResource("CheapExcel.txt").getFile();
+            // cool, no input streams necessary, guava rulezzzz
+            String fileContent = Files.toString(file, Charsets.UTF_8);
 
-        var performances = fileContent.lines().dropWhile(l -> !l.startsWith(customer)).takeWhile(l -> l.startsWith(customer)).map(l -> l.split(", "))
-                .map(a -> Performance.builder().playID(a[1]).audience(Integer.parseInt(a[2])).build()).collect(Collectors.toList());
-        if ( CollectionUtils.isEmpty(performances)) {
-            this.performances = UnmodifiableList.decorate(new ArrayList<>());
+            var performances = fileContent.lines().dropWhile(l -> !l.startsWith(customer)).takeWhile(l -> l.startsWith(customer)).map(l -> l.split(", "))
+                    .map(a -> Performance.builder().playID(a[1]).audience(Integer.parseInt(a[2])).build()).collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(performances)) {
+                this.performances = UnmodifiableList.decorate(new ArrayList<>());
+            } else {
+                this.performances = new ArrayList<Performance>(performances);
+            }
         } else {
-            this.performances = new ArrayList<Performance>(performances);
+            this.customer = StringUtils.defaultIfEmpty(customer, "");
+            this.performances = ImmutableList.of();
+            return;
         }
     }
 }
