@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,8 +17,10 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@Table(name="plays")
-public class Play {
+@Table(name = "plays")
+public class Play implements Serializable {
+
+    private static final long serialVersionUID = 42L;
 
     @Id
     @GeneratedValue

@@ -20,14 +20,17 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-    implementation("com.google.guava:guava:28.2-jre")
-    implementation 'commons-collections:commons-collections:3.2.2'
+    implementation("com.google.guava:guava:10.0")
+    implementation 'commons-collections:commons-collections:3.2.1'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'commons-lang:commons-lang:2.6'
-    implementation 'org.apache.commons:commons-collections4:4.4'
+    implementation 'org.apache.commons:commons-collections4:4.1'
     implementation 'org.eclipse.collections:eclipse-collections-api:10.2.0'
     implementation 'org.eclipse.collections:eclipse-collections:10.2.0'
+    implementation 'javax.cache:cache-api:1.1.0'
+    implementation 'org.ehcache:ehcache:3.6.2'
 
     runtime 'com.h2database:h2:1.4.199'
 
