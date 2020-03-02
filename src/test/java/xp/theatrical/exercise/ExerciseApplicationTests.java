@@ -27,4 +27,22 @@ class ExerciseApplicationTests {
                 + "Amount owed is $1,300.00\n"
                 + "You earned 5 credits\n");
     }
+
+    @Test
+    void missing_customer() {
+        given()
+            .port(port)
+        .when()
+            .get("/statement/")
+        .then()
+            .statusCode(404);
+    }
+
+    @Test
+    void missing_customer_message() {
+        String response = given().port(port).when().get("/statement/").asString();
+        assertThat(response).contains("\"status\":404,\"error\":\"Not Found\",\"message\":\"No message available\",\"path\":\"/statement/\"");
+    }
+
+    // TODO: write tests
 }
