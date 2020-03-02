@@ -3,12 +3,7 @@ package xp.theatrical.exercise;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.list.UnmodifiableList;
 import org.apache.commons.lang.BooleanUtils;
@@ -24,7 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 @ToString
 @Getter
@@ -37,15 +31,16 @@ public class Invoice {
     private String customer;
     private List<Performance> performances;
 
+    @SneakyThrows
     @SuppressWarnings("unchecked")
-    public Invoice(String customer) throws IOException {
-        if (customer != null) {
-            this.customer = customer;
+    public Invoice(String c, List<Performance> list) {
+        if (c != null) {
+            this.customer = c;
             File file = new ClassPathResource("CheapExcel.txt").getFile();
             // cool, no input streams necessary, guava rulezzzz
             String fileContent = Files.toString(file, Charsets.UTF_8);
 
-            var performances = fileContent.lines().dropWhile(l -> !l.startsWith(customer)).takeWhile(l -> l.startsWith(customer)).map(l -> l.split(", "))
+            var performances = fileContent.lines().dropWhile(l -> !l.startsWith(c)).takeWhile(l -> l.startsWith(c)).map(l -> l.split(", "))
                     .map(a -> Performance.builder().playID(a[1]).audience(Integer.parseInt(a[2])).build()).collect(Collectors.toList());
             if (BooleanUtils.isTrue( CollectionUtils.isEmpty(performances)) ){
                 this.performances = UnmodifiableList.decorate(new ArrayList<Performance>());
@@ -53,8 +48,9 @@ public class Invoice {
                 // TODO: eclipse collections are the best, should rewrite everything to use them!
                 this.performances = Lists.mutable.ofAll(performances);
             }
+            list.addAll(performances);
         } else {
-                this.customer = StringUtils.defaultIfEmpty(customer, "");
+                this.customer = StringUtils.defaultIfEmpty(c, "");
                 this.performances = ImmutableList.of();
                 return;
         }

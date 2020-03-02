@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,12 +36,11 @@ class StatementController {
         var totalAmount = 0;
         var volumeCredits = 0;
 
-        Invoice invoice = new Invoice(StringUtils.substringAfterLast(request.getServletPath(), "/"));
+        List<Performance> psList = new ArrayList<Performance>();
+        Invoice invoice = new Invoice(StringUtils.substringAfterLast(request.getServletPath(), "/"), psList);
         var st = String.format("Statement for %s\n", invoice.getCustomer());
 
         NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
-
-        List<Performance> psList = invoice.getPerformances();
 
         while (i < psList.size()) {
             Performance perf = psList.get(i);
