@@ -2,10 +2,10 @@
 
 Dear friend,
 
-our senior developers who wrote this application have gone to new projects where they can start using kotlin, we need your help!
+the developers who wrote this application have gone to new projects where they can start using kotlin, we need your help!
 
 It's the end of the month, we want to invoice all our clients.
-At midnight a cron job will trigger and the invoicing system will make requests to this application.
+At midnight a cron job will trigger and this application will receive requests to generate the invoice texts.
 With the returned data, we'll print out the real invoices and send them to our customers.
 Something is wrong though, our latest test runs don't show all performances for the clients.
 The invoice for Alibabe is correct, but the invoice for BigCo is missing the last 2 performances we played for them.
@@ -23,7 +23,6 @@ Statement for BigCo
 Amount owed is $2,524.00
 You earned 38 credits
 ```
-
 
 Let me tell you what I remember from the developers:
 
@@ -49,13 +48,20 @@ Here an example:
 ```json
 {
   "company": "BigCo",
-  "performances": [{"name": "Hamlet", "amount": "$400.00", "seats":  10},{"name":, "Othello", "amount": "$500.00", "seats":  40}],
+  "performances": [{"name": "Hamlet", "amount": "$400.00", "seats":  10},{"name": "Othello", "amount": "$500.00", "seats":  40}],
   "total": "$900.00",
   "credits": 10
 }
 ```
 
-* Soon we'll also want to play our first drama. As I said, we can add that type to the database ourselves, but the charging rules will be different from what we have for comedy&tragedies.
+* Soon we'll also want to play our first drama. 
+As I said, we can add that type to the database ourselves, but the charging rules will be different from what we have for comedy&tragedies.
+We'll charge $50000 and if there are more than 20 visitors, we charge $1000 extra each. If we have even more than 40 visitors, for those we charge $500 extra.
+
+thisAmount = 40000;
+                    if (perf.audience > 30)
+                        thisAmount += 1000 * (perf.audience - 30);
+                    break;
 
 
 * We're a bit concerned. 

@@ -35,6 +35,7 @@ class StatementController {
     @ResponseBody
     public String plaintext(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/plain");
+        var i = 0;
         var totalAmount = 0;
         var volumeCredits = 0;
 
@@ -44,26 +45,25 @@ class StatementController {
         NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
 
         List<Performance> performances = invoice.getPerformances();
-        int i = 0;
+
         while (i < performances.size()) {
             Performance perf = performances.get(i);
             Play play;
             try {
-                play =
-                        Maps.uniqueIndex(template.query("SELECT id, name, type FROM plays", (rs, rowNum) -> new Play(rs.getLong("id"), rs.getString("name"), rs.getString("tpye"))),
-                                this::getPlayStringFunction).get(perf.playID);
+                play = Maps.uniqueIndex(template.query("SELECT id, name, type FROM plays", (rs, rowNum) -> new Play(rs.getLong("id"), rs.getString("name"), rs.getString("tpye"))),
+                            this::getPlayStringFunction).get(perf.playID);
             } catch (Exception e1) {
                 // some exception in line 53 but I won't fix sql, that is for database nerds, real java programmers use hibernate.
                 try {
                     Map<String, Play> map = new HashMap<>();
                     org.apache.commons.collections4.MapUtils.populateMap(map, repo.findAll(), this::getPlayStringFunction);
                     play = map.get(perf.playID);
+                    i++;
                 } catch (HibernateException e2) {
                     throw new RuntimeException("hibernate didn't succeed, we're lost");
                 }
             }
             var thisAmount = 0;
-            i++;
             switch (play.getType()) {
                 case "tragedy":
                     thisAmount = 40000;
