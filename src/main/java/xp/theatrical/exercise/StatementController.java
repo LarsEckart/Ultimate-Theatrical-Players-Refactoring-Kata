@@ -30,11 +30,11 @@ class StatementController {
         String customer = "BigCo";
 
         Invoice invoice = new Invoice(customer);
-        var result = String.format("Statement for %s\n", invoice.customer);
+        var result = String.format("Statement for %s\n", invoice.getCustomer());
 
         NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
 
-        for (var perf : invoice.performances) {
+        for (var perf : invoice.getPerformances()) {
             var play = Maps.uniqueIndex(template.query("SELECT * FROM plays", (rs, rowNum) -> new Play(rs.getString("name"), rs.getString("type"))), this::getPlayStringFunction).get(perf.playID);
             var thisAmount = 0;
 
