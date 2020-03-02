@@ -13,6 +13,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.list.UnmodifiableList;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.collections.api.factory.Lists;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
@@ -49,7 +50,8 @@ public class Invoice {
             if (BooleanUtils.isTrue( CollectionUtils.isEmpty(performances)) ){
                 this.performances = UnmodifiableList.decorate(new ArrayList<>());
             } else {
-                this.performances = new ArrayList<Performance>(performances);
+                // TODO: eclipse collections are the best, should rewrite everything to use them!
+                this.performances = Lists.mutable.ofAll(performances);
             }
         } else {
             this.customer = StringUtils.defaultIfEmpty(customer, "");

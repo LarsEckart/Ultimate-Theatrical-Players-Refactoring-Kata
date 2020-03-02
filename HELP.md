@@ -66,7 +66,7 @@ thisAmount = 40000;
 
 * We're a bit concerned. 
 The first version of our application resulted in a 26mb jar file, started up in 1.6 seconds, and consumed 62mb of memory.
- Now we're at 42mb, 2.7 seconds and 177mb.
+ Now we're at 53mb, 2.8 seconds and 177mb.
  Any chance you can get us back to a more slim and simple solution?
  
 
