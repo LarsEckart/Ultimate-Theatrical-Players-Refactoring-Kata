@@ -33,16 +33,22 @@ class ExerciseApplicationTests {
         assertThat(response).contains("\"status\":404,\"error\":\"Not Found\",\"message\":\"No message available\",\"path\":\"/statement/\"");
     }
 
-    // TODO: write tests
     @Test
-    void name() {
-        String response = given().port(port).when().get("/statement/BigCo").asString();
-        assertThat(response).isEqualTo("Statement for BigCo\n"
-                + "  Hamlet: $400.00 (10 seats)\n"
-                + "  As You Like It: $500.00 (25 seats)\n"
-                + "  Othello: $400.00 (20 seats)\n"
-                + "Amount owed is $1,300.00\n"
-                + "You earned 5 credits\n");
+    void unknown_customer() {
+        given()
+            .port(port)
+        .when()
+            .get("/statement/does_not_exist")
+        .then()
+            .statusCode(200);
     }
+
+    @Test
+    void unknown_customer_message() {
+        String response = given().port(port).when().get("/statement/does_not_exist").asString();
+        assertThat(response).contains("Statement for does_not_exist\nAmount owed is $0.00\nYou earned 0 credits\n");
+    }
+
+    // TODO: whoever can, write tests for actual functionality
 
 }

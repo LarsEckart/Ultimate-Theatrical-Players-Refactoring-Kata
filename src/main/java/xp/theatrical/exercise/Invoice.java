@@ -48,15 +48,15 @@ public class Invoice {
             var performances = fileContent.lines().dropWhile(l -> !l.startsWith(customer)).takeWhile(l -> l.startsWith(customer)).map(l -> l.split(", "))
                     .map(a -> Performance.builder().playID(a[1]).audience(Integer.parseInt(a[2])).build()).collect(Collectors.toList());
             if (BooleanUtils.isTrue( CollectionUtils.isEmpty(performances)) ){
-                this.performances = UnmodifiableList.decorate(new ArrayList<>());
+                this.performances = UnmodifiableList.decorate(new ArrayList<Performance>());
             } else {
                 // TODO: eclipse collections are the best, should rewrite everything to use them!
                 this.performances = Lists.mutable.ofAll(performances);
             }
         } else {
-            this.customer = StringUtils.defaultIfEmpty(customer, "");
-            this.performances = ImmutableList.of();
-            return;
+                this.customer = StringUtils.defaultIfEmpty(customer, "");
+                this.performances = ImmutableList.of();
+                return;
         }
     }
 }

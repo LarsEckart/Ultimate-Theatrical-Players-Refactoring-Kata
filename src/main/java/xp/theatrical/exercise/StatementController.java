@@ -44,18 +44,18 @@ class StatementController {
 
         NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
 
-        List<Performance> performances = invoice.getPerformances();
+        List<Performance> psList = invoice.getPerformances();
 
-        while (i < performances.size()) {
-            Performance perf = performances.get(i);
+        while (i < psList.size()) {
+            Performance perf = psList.get(i);
             Play play;
             try {
-                play = Maps.uniqueIndex(template.query("SELECT id, name, type FROM plays", (rs, rowNum) -> new Play(rs.getLong("id"), rs.getString("name"), rs.getString("tpye"))),
+                play = Maps.uniqueIndex(template.query("SELECT p.id, p.name, p.type FROM plays p", (rs, rowNum) -> new Play(rs.getLong("id"), rs.getString("name"), rs.getString("tpye"))),
                             this::getPlayStringFunction).get(perf.playID);
             } catch (Exception e1) {
                 // some exception in line 53 but I won't fix sql, that is for database nerds, real java programmers use hibernate.
                 try {
-                    Map<String, Play> map = new HashMap<>();
+                    Map<String, Play> map = new HashMap<String, Play>();
                     org.apache.commons.collections4.MapUtils.populateMap(map, repo.findAll(), this::getPlayStringFunction);
                     play = map.get(perf.playID);
                     i++;
@@ -67,8 +67,10 @@ class StatementController {
             switch (play.getType()) {
                 case "tragedy":
                     thisAmount = 40000;
-                    if (perf.audience > 30)
+                    if (perf.audience <= 30) {
+                    } else {
                         thisAmount += 1000 * (perf.audience - 30);
+                    }
                     break;
                 case "comedy":
                     thisAmount = 30000;
