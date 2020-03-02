@@ -1,0 +1,40 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+}
+
+group = 'xp.theatrical'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    //implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtime 'com.h2database:h2:1.4.199'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation 'io.rest-assured:rest-assured:4.2.0'
+    testImplementation 'io.rest-assured:json-path:4.2.0'
+    testImplementation 'io.rest-assured:xml-path:4.2.0'
+}
+
+test {
+    useJUnitPlatform()
+}
