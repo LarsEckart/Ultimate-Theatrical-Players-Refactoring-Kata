@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
@@ -20,16 +22,15 @@ class StatementController {
     @Autowired
     private JdbcTemplate template;
 
-    @RequestMapping(value = "/statement",
+    @RequestMapping(value = "/statement/{cust}", produces={"text/plain"},
             method = RequestMethod.GET)
     @ResponseBody
-    public String plaintext(HttpServletResponse response) throws IOException {
+    public String plaintext(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/plain");
         var totalAmount = 0;
         var volumeCredits = 0;
-        String customer = "BigCo";
 
-        Invoice invoice = new Invoice(customer);
+        Invoice invoice = new Invoice(request.getServletPath().substring(11));
         var result = String.format("Statement for %s\n", invoice.getCustomer());
 
         NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);

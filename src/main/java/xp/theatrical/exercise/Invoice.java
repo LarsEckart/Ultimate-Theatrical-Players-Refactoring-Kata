@@ -2,9 +2,12 @@ package xp.theatrical.exercise;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
@@ -15,6 +18,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
 @Getter
 @Setter
 /*

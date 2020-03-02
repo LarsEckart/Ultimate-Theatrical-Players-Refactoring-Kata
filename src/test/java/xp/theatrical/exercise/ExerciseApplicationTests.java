@@ -19,7 +19,7 @@ class ExerciseApplicationTests {
 
     @Test
     void name() {
-        String response = given().port(port).when().get("/statement").asString();
+        String response = given().port(port).when().get("/statement/BigCo").asString();
         assertThat(response).isEqualTo("Statement for BigCo\n"
                 + "  Hamlet: $400.00 (10 seats)\n"
                 + "  As You Like It: $500.00 (25 seats)\n"
