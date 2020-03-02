@@ -1,5 +1,7 @@
 package xp.theatrical.exercise;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
@@ -10,9 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -35,7 +34,7 @@ class StatementController {
                 new Performance("as-like", 25),
                 new Performance("othello", 20));
         List<Play> query = template.query("SELECT * FROM plays", (rs, rowNum) -> new Play(rs.getString("name"), rs.getString("type")));
-        Map<String, Play> plays = query.stream().collect(Collectors.toMap(getPlayStringFunction(), play -> play));
+        ImmutableMap<String, Play> plays = Maps.uniqueIndex(query, p -> getPlayStringFunction(p));
         Invoice invoice = new Invoice("BigCo", performances);
 
         var result = String.format("Statement for %s\n", invoice.customer);
@@ -82,16 +81,14 @@ class StatementController {
         return result;
     }
 
-    private Function<Play, String> getPlayStringFunction() {
-        return p -> {
-            if (p.name == "Hamlet") {
-                return p.name.toLowerCase();
-            } else if (p.name.equals("As You Like It")) {
-                return "as-like";
-            } else {
-                return p.name.toLowerCase();
-            }
-        };
+    private String getPlayStringFunction(Play p) {
+        if (p.name == "Hamlet") {
+            return p.name.toLowerCase();
+        } else if (p.name.equals("As You Like It")) {
+            return "as-like";
+        } else {
+            return p.name.toLowerCase();
+        }
     }
 
 }
