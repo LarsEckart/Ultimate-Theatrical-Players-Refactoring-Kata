@@ -23,6 +23,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation("com.google.guava:guava:28.2-jre")
     //implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'commons-collections:commons-collections:3.2.2'
+    implementation 'commons-lang:commons-lang:2.6'
+
     runtime 'com.h2database:h2:1.4.199'
 
     compileOnly 'org.projectlombok:lombok'

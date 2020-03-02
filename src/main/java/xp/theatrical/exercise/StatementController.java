@@ -1,6 +1,8 @@
 package xp.theatrical.exercise;
 
 import com.google.common.collect.Maps;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,12 +33,12 @@ class StatementController {
         var totalAmount = 0;
         var volumeCredits = 0;
 
-        Invoice invoice = new Invoice(request.getServletPath().substring(11));
+        Invoice invoice = new Invoice(StringUtils.substringAfterLast(request.getServletPath(), "/"));
         var st = String.format("Statement for %s\n", invoice.getCustomer());
 
         NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
 
-        ArrayList<Performance> performances = invoice.getPerformances();
+        List<Performance> performances = invoice.getPerformances();
         int i = 0;
         while (i < performances.size()) {
             Performance perf = performances.get(i);

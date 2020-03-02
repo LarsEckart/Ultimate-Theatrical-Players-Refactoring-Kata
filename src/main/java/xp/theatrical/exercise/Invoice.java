@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.list.UnmodifiableList;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
@@ -29,8 +31,9 @@ import java.util.stream.Collectors;
 public class Invoice {
 
     private String customer;
-    private ArrayList<Performance> performances;
+    private List<Performance> performances;
 
+    @SuppressWarnings("unchecked")
     public Invoice(String customer) throws IOException {
         this.customer = customer;
         File file = new ClassPathResource("CheapExcel.txt").getFile();
@@ -39,6 +42,10 @@ public class Invoice {
 
         var performances = fileContent.lines().dropWhile(l -> !l.startsWith(customer)).takeWhile(l -> l.startsWith(customer)).map(l -> l.split(", "))
                 .map(a -> Performance.builder().playID(a[1]).audience(Integer.parseInt(a[2])).build()).collect(Collectors.toList());
-        this.performances = new ArrayList<Performance>(performances);
+        if ( CollectionUtils.isEmpty(performances)) {
+            this.performances = UnmodifiableList.decorate(new ArrayList<>());
+        } else {
+            this.performances = new ArrayList<Performance>(performances);
+        }
     }
 }
