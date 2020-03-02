@@ -1,0 +1,11 @@
+aol, othello, 65
+aol, othello, 5
+BigCo, hamlet, 10
+BigCo, as-like, 25
+BigCo, othello, 20
+EvilCorp, hamlet, 100
+EvilCorp, hamlet, 80
+EvilCorp, as-like, 68
+EvilCorp, othello, 70
+LargeCorp, as-like, 10
+LargeCorp, othello, 9

@@ -1,17 +1,26 @@
 package xp.theatrical.exercise;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.google.common.io.Files;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,17 +33,18 @@ class StatementController {
     @RequestMapping(value = "/statement",
             method = RequestMethod.GET)
     @ResponseBody
-    public String plaintext(HttpServletResponse response) {
+    public String plaintext(HttpServletResponse response) throws IOException {
         response.setContentType("text/plain");
         var totalAmount = 0;
         var volumeCredits = 0;
-        // TODO:
-        List<Performance> performances = List.of(
-                new Performance("hamlet", 10),
-                new Performance("as-like", 25),
-                new Performance("othello", 20));
-        Invoice invoice = new Invoice("BigCo", performances);
+        String customer = "BigCo";
 
+        File file = new ClassPathResource("performanceCheapExcel.txt").getFile();
+        String fileContent = Files.toString(file, Charsets.UTF_8);
+
+        List<Performance> performances = fileContent.lines().dropWhile(l -> !l.startsWith(customer)).takeWhile(l -> l.startsWith(customer)).map(l -> l.split(", "))
+                .map(a -> Performance.builder().playID(a[1]).audience(Integer.parseInt(a[2])).build()).collect(Collectors.toList());
+        Invoice invoice = new Invoice(customer, performances);
         var result = String.format("Statement for %s\n", invoice.customer);
 
         NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
