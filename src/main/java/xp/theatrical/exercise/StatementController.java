@@ -32,7 +32,7 @@ class StatementController {
     @ResponseBody
     public String plaintext(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/plain");
-        var i = 0;
+        var var = 0;
         var totalAmount = 0;
         var volumeCredits = 0;
 
@@ -42,8 +42,8 @@ class StatementController {
 
         NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
 
-        while (i < psList.size()) {
-            Performance perf = psList.get(i);
+        while (var < psList.size()) {
+            Performance perf = psList.get(var);
             Play play;
             try {
                 play = Maps.uniqueIndex(template.query("SELECT p.id, p.name, p.type FROM plays p", (rs, rowNum) -> new Play(rs.getLong("id"), rs.getString("name"), rs.getString("tpye"))),
@@ -54,7 +54,7 @@ class StatementController {
                     Map<String, Play> map = new HashMap<String, Play>();
                     org.apache.commons.collections4.MapUtils.populateMap(map, repo.findAll(), this::getPlayStringFunction);
                     play = map.get(perf.playID);
-                    i++;
+                    var++;
                 } catch (HibernateException e2) {
                     throw new RuntimeException("hibernate didn't succeed, we're lost");
                 }
