@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class Performance {
 
     public String playID;
-    public int audience;
-    public LocalDate date;
+    private int audience;
+    private LocalDate date;
 
 }

@@ -36,19 +36,19 @@ public class Invoice {
     public Invoice(String c, List<Performance> list) {
         if (c != null) {
             this.customer = c;
-            File file = new ClassPathResource("CheapExcel.txt").getFile();
+            var f = new ClassPathResource("CheapExcel.txt").getFile();
             // cool, no input streams necessary, guava rulezzzz
-            String fileContent = Files.toString(file, Charsets.UTF_8);
+            var fc = Files.toString(f, Charsets.UTF_8);
 
-            var performances = fileContent.lines().dropWhile(l -> !l.startsWith(c)).takeWhile(l -> l.startsWith(c)).map(l -> l.split(", "))
+            var pers = fc.lines().dropWhile(l -> !l.startsWith(c)).takeWhile(l -> l.startsWith(c)).map(l -> l.split(", "))
                     .map(a -> Performance.builder().playID(a[1]).audience(Integer.parseInt(a[2])).build()).collect(Collectors.toList());
-            if (BooleanUtils.isTrue( CollectionUtils.isEmpty(performances)) ){
+            if (BooleanUtils.isTrue( CollectionUtils.isEmpty(pers)) ){
                 this.performances = UnmodifiableList.decorate(new ArrayList<Performance>());
             } else {
                 // TODO: eclipse collections are the best, should rewrite everything to use them!
-                this.performances = Lists.mutable.ofAll(performances);
+                this.performances = Lists.mutable.ofAll(pers);
             }
-            list.addAll(performances);
+            list.addAll(pers);
         } else {
                 this.customer = StringUtils.defaultIfEmpty(c, "");
                 this.performances = ImmutableList.of();

@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 class StatementController {
 
+    public static final String sql = "SELECT name, type FROM plays";
+
     @Autowired
     private JdbcTemplate template;
 
@@ -63,27 +65,27 @@ class StatementController {
             switch (play.getType()) {
                 case "tragedy":
                     thisAmount = 40000;
-                    if (perf.audience <= 30) {
+                    if (perf.getAudience() <= 30) {
                     } else {
-                        thisAmount += 1000 * (perf.audience - 30);
+                        thisAmount += 1000 * (perf.getAudience() - 30);
                     }
                     break;
                 case "comedy":
                     thisAmount = 30000;
-                    if (perf.audience > 20)
-                        thisAmount += 10000 + 500 * (perf.audience - 20);
-                    thisAmount += 300 * perf.audience;
+                    if (perf.getAudience() > 20)
+                        thisAmount += 10000 + 500 * (perf.getAudience() - 20);
+                    thisAmount += 300 * perf.getAudience();
                     break;
                 default:
                     throw new Error("unknown type: ${play.type}");
             }
             // add volume credits
-            volumeCredits += Math.max(perf.audience - 30, 0);
+            volumeCredits += Math.max(perf.getAudience() - 30, 0);
             // add extra credit for every ten comedy attendees
             if ("comedy".equals(play.getType()) == true)
-                volumeCredits += Math.floor(perf.audience / 5);
+                volumeCredits += Math.floor(perf.getAudience() / 5);
             // print line for this order
-            st += String.format("  %s: %s (%s seats)\n", play.getName(), frmt.format(thisAmount / 100), perf.audience);
+            st += String.format("  %s: %s (%s seats)\n", play.getName(), frmt.format(thisAmount / 100), perf.getAudience());
             totalAmount += thisAmount;
         }
         st += String.format("Amount owed is %s\n", frmt.format(totalAmount / 100));
