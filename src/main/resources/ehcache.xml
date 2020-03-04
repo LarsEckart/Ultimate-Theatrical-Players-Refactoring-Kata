@@ -9,8 +9,18 @@
         <key-type>org.springframework.cache.interceptor.SimpleKey</key-type>
         <value-type>java.util.ArrayList</value-type>
         <expiry>
-            <ttl unit="seconds">30</ttl>
+            <ttl unit="seconds">1</ttl>
         </expiry>
+
+        <listeners>
+            <listener>
+                <class>xp.theatrical.exercise.CacheEventLogger</class>
+                <event-firing-mode>ASYNCHRONOUS</event-firing-mode>
+                <event-ordering-mode>UNORDERED</event-ordering-mode>
+                <events-to-fire-on>CREATED</events-to-fire-on>
+                <events-to-fire-on>EXPIRED</events-to-fire-on>
+            </listener>
+        </listeners>
 
         <resources>
             <heap unit="entries">10</heap>
