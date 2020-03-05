@@ -3,6 +3,7 @@ package xp.theatrical.exercise;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
+import com.google.common.io.Resources;
 import lombok.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.list.UnmodifiableList;
@@ -11,11 +12,13 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.collections.api.factory.Lists;
 import org.springframework.core.io.ClassPathResource;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Array;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
@@ -36,9 +39,15 @@ public class Invoice {
     public Invoice(String c, List<Performance> list) {
         if (c != null) {
             this.customer = c;
-            var f = new ClassPathResource("CheapExcel.txt").getFile();
+            /*
+            https://community.oracle.com/blogs/pat/2004/10/23/stupid-scanner-tricks
+            InputStream inputStream = Invoice.class.getClassLoader().getResourceAsStream("CheapExcel.txt");
+            String fc = new Scanner(inputStream, "UTF-8").useDelimiter("\\A").next();
+            */
+
+            var url = Resources.getResource("CheapExcel.txt");
             // cool, no input streams necessary, guava rulezzzz
-            var fc = Files.toString(f, Charsets.UTF_8);
+            var fc = Resources.toString(url, StandardCharsets.UTF_8);
 
             var pers = fc.lines().dropWhile(l -> !l.startsWith(c)).takeWhile(l -> l.startsWith(c)).map(l -> l.split(", "))
                     .map(a -> Performance.builder().playID(a[1]).audience(Integer.parseInt(a[2])).build()).collect(Collectors.toList());
