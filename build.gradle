@@ -40,9 +40,12 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    testImplementation 'io.rest-assured:rest-assured:4.2.0'
-    testImplementation 'io.rest-assured:json-path:4.2.0'
-    testImplementation 'io.rest-assured:xml-path:4.2.0'
+    testImplementation("io.rest-assured:rest-assured:4.2.0")
+    testImplementation("io.rest-assured:json-path:4.2.0")
+    testImplementation("io.rest-assured:xml-path:4.2.0")
+    testImplementation("org.assertj:assertj-core:3.23.1")
+    testImplementation("com.approvaltests:approvaltests:18.2.2")
+    testImplementation("com.larseckart:junit-tcr-extensions:0.0.1")
 }
 
 test {
