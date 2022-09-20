@@ -49,8 +49,15 @@ public class Invoice {
             // cool, no input streams necessary, guava rulezzzz
             var fc = Resources.toString(url, StandardCharsets.UTF_8);
 
-            var pers = fc.lines().dropWhile(l -> !l.startsWith(c)).takeWhile(l -> l.startsWith(c)).map(l -> l.split(", "))
-                    .map(a -> Performance.builder().playID(a[1]).audience(Integer.parseInt(a[2])).build()).collect(Collectors.toList());
+            var pers = fc.lines()
+                    .dropWhile(l -> !l.startsWith(c))
+                    .takeWhile(l -> l.startsWith(c))
+                    .map(l -> l.split(", "))
+                    .map(a -> Performance.builder()
+                            .playID(a[1])
+                            .audience(Integer.parseInt(a[2]))
+                            .build())
+                    .collect(Collectors.toList());
             if (BooleanUtils.isTrue( CollectionUtils.isEmpty(pers)) ){
                 this.performances = UnmodifiableList.decorate(new ArrayList<Performance>());
             } else {
